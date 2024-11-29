@@ -1,0 +1,41 @@
+name: Build and Deploy Angular App
+
+on:
+  push:
+    branches:
+      - main  # Trigger the workflow when pushing to the main branch
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    # Step 1: Checkout the code
+    - name: Checkout Repository
+      uses: actions/checkout@v3
+
+    # Step 2: Set up Node.js environment
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: 20  # Ensure compatibility with Angular
+
+    # Step 3: Install dependencies
+    - name: Install Dependencies
+      run: npm install
+
+    # Step 4: Run Angular build
+    - name: Build Angular Project
+      run: npm run build -- --prod  # Generate production build in `dist` folder
+
+    # Step 5: Commit and Push the Build
+    - name: Deploy to dist Folder
+      run: |
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
+        rm -rf build || true
+        cp -R dist ./build
+        git add build
+        git commit -m "Deploy Angular Build to dist folder"
+        git push origin main
