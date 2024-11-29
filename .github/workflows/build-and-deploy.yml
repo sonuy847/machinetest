@@ -25,9 +25,14 @@ jobs:
     - name: Install Dependencies
       run: npm install
 
+    # Step: Verify Angular CLI version
+    - name: Check Angular CLI Version
+      run: npx ng version
+
+
     # Step 4: Run Angular build
     - name: Build Angular Project
-      run: npm run build -- --prod  # Generate production build in `dist` folder
+      run: npm run build -- --configuration=production  # Generate production build in `dist` folder
 
     # Step 5: Commit and Push the Build
     - name: Deploy to dist Folder
